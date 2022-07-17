@@ -1,4 +1,5 @@
 import { computed, ref, reactive } from "vue";
+import numAdd from "@/utils/numAdd";
 import _ from "lodash";
 
 export default function amountDialog(bills, categories) {
@@ -21,11 +22,13 @@ export default function amountDialog(bills, categories) {
             // 如果没有这个属性，则创建属性
             result[category.id] = {};
             result[category.id]["category"] = category.name;
-            result[category.id]["amount"] = parseInt(bill.amount);
+            result[category.id]["amount"] = parseFloat(bill.amount);
           } else {
             // 如果存在这个属性，则相加
-            result[category.id]["amount"] =
-              result[category.id]["amount"] + parseInt(bill.amount);
+            result[category.id]["amount"] = numAdd(
+              result[category.id]["amount"],
+              parseFloat(bill.amount)
+            );
           }
           break;
         }

@@ -3,6 +3,7 @@ const path = require('path')
 const cateoryUrl = path.join(process.cwd(), '/data/categories.csv')
 const billUrl = path.join(process.cwd(), '/data/bill.csv')
 const { Csv2png } = require('csv2png')
+const toDecimal2 = require('../utils/toDecimal2')
 
 module.exports.getCateories = function (req, res, next) {
   const pc = new Csv2png({
@@ -11,7 +12,7 @@ module.exports.getCateories = function (req, res, next) {
     width: 400,
     lf: '\n'
   })
- 
+
   let c = pc.compile() // 解析png对象
   let opt = {
     png: c.imgData,
@@ -29,9 +30,9 @@ module.exports.createBill = function (req, res, next) {
   let type = req.body.type
   let category = req.body.category
   let amount = req.body.amount
-  console.log(time, type, category, amount)
+  console.log(toDecimal2(amount))
   // 拼接存储数据字符串
-  let dataStr = `\n${type},${time},${category},${amount}`
+  let dataStr = `\n${type},${time},${category},${toDecimal2(amount)}`
   console.log(dataStr)
   let result = fs.appendFileSync(billUrl, dataStr, { encoding: 'utf-8' })
   // console.log(result)

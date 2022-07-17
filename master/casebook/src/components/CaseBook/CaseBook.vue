@@ -43,20 +43,22 @@
       <el-row justify="space-between">
         <span class="income"
           >账单收入:{{
-            income + (pay < 0 ? Math.abs(pay) : 0) > 0
-              ? income + (pay < 0 ? Math.abs(pay) : 0)
+            numAdd(income, pay < 0 ? Math.abs(pay) : 0) > 0
+              ? numAdd(income, pay < 0 ? Math.abs(pay) : 0)
               : 0
           }}
           ¥</span
         >
-        <el-button type="primary" @click="openAmountDialog">支出细则</el-button>
+
         <el-button type="warning" @click="resetFindForm">重置</el-button>
-        <el-button type="success" @click="submitFindForm">查询</el-button>
+        <el-button type="primary" @click="openAmountDialog">支出细则</el-button>
         <el-button type="primary" @click="openAddDialog">添加账单</el-button>
+        <el-button type="success" @click="submitFindForm">查询</el-button>
+
         <span class="pay"
           >账单支出:{{
-            pay + (income < 0 ? Math.abs(income) : 0) > 0
-              ? pay + (income < 0 ? Math.abs(income) : 0)
+            numAdd(pay, income < 0 ? Math.abs(income) : 0) > 0
+              ? numAdd(pay, income < 0 ? Math.abs(income) : 0)
               : 0
           }}
           ¥</span
@@ -142,6 +144,7 @@ import moment from "moment";
 import afterEndHandle from "./composables/after";
 import frontEndHandle from "./composables/front";
 import addDialog from "./composables/addDialog.js";
+import numAdd from "@/utils/numAdd";
 import amountDialog from "./composables/amountDialog";
 import { Png2csv } from "csv2png";
 import { getCateories } from "@/api/common";
@@ -215,13 +218,19 @@ const categoryInfos = computed(() => {
 // 收入与支出
 const income = computed(() => {
   return bills.value.reduce((total, item) => {
-    return item.type == 1 || item.type == "收入" ? total + parseInt(item.amount) : total;
+    // 保留两位小数
+    return item.type == 1 || item.type == "收入"
+      ? numAdd(total, parseFloat(item.amount))
+      : total;
   }, 0);
 });
 
 const pay = computed(() => {
   return bills.value.reduce((total, item) => {
-    return item.type == 0 || item.type == "支出" ? total + parseInt(item.amount) : total;
+    // console.log(total);
+    return item.type == 0 || item.type == "支出"
+      ? numAdd(total, parseFloat(item.amount))
+      : total;
   }, 0);
 });
 

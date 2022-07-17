@@ -9,7 +9,8 @@ export const isExternal = (path) => /^(https?:|mailto:|tel:)/.test(path);
  * 判断是否为数字
  */
 export const checkNumberValidator = (rule, value, callback) => {
-  const reg = /^\d+$/;
+  const reg = /^\d*\.?\d+$/;
+  value = value +""
   if (value.trim() === "") {
     return callback(new Error("请输入账单金额"));
   }

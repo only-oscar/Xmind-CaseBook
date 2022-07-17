@@ -62,6 +62,7 @@ export default function addDialog(callback) {
     // 选择type值，出现2级选择分类对话框
     changeAddType: () => {
       addCateSelector.value = false;
+      addForm.value.category = "";
     },
     addBill: () => {
       addFormRef.value.validate(async (valid) => {
